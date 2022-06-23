@@ -5,7 +5,7 @@ import json
 from telegram import Update
 from telegram.ext import filters, MessageHandler, ApplicationBuilder, CommandHandler, ContextTypes
 
-from mtranslate import translate
+from deepl import translate
 
 
 keys = json.load(open('keys.json'))
@@ -26,14 +26,16 @@ async def echo(update: Update, context: ContextTypes):
     text = translate(update.message.text, 'en')
 
     completion = openai.Completion.create(
-    engine='gpt-neo-20b',
-    prompt=text,
-    max_tokens=128,
-    stream=False)
+        engine='gpt-neo-20b',
+        prompt=text,
+        max_tokens=256,
+        stream=False,
+    )
 
     text = completion.choices[0].text
 
     ru_trans = translate(text, 'ru')
+    ru_trans = ru_trans[:ru_trans.rfind('.')] + '.'
     await context.bot.send_message(chat_id=update.effective_chat.id, text=ru_trans)
 
 
