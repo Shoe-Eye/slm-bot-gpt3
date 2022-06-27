@@ -31,7 +31,7 @@ async def echo(update: Update, context: ContextTypes):
     completion = openai.Completion.create(
         engine='gpt-neo-20b',
         prompt=text,
-        max_tokens=128,
+        max_tokens=256,
         stream=False,
     )
 
